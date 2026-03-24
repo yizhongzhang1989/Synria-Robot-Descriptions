@@ -17,7 +17,7 @@ Usage:
 Requirements:
     - Python 3.7+
     - A modern web browser
-    - Internet connection (for loading Three.js from CDN)
+    (No internet connection required - all JS dependencies are bundled locally)
 """
 
 import argparse
@@ -34,6 +34,7 @@ from pathlib import Path
 mimetypes.add_type("application/octet-stream", ".stl")
 mimetypes.add_type("application/octet-stream", ".STL")
 mimetypes.add_type("application/xml", ".urdf")
+mimetypes.add_type("application/javascript", ".js")
 
 VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
@@ -124,9 +125,9 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
     <script type="importmap">
     {
         "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
-            "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+            "three": "./examples/vendor/three.module.js",
+            "three/addons/": "./examples/vendor/addons/",
+            "three/examples/jsm/": "./examples/vendor/addons/"
         }
     }
     </script>
@@ -145,7 +146,7 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import URDFLoader from 'https://cdn.jsdelivr.net/npm/urdf-loader@0.12.4/src/URDFLoader.js';
+        import URDFLoader from './examples/vendor/URDFLoader.js';
 
         const URDF_PATH = '__URDF_PATH__';
 

@@ -157,7 +157,8 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
         // ---- Camera ----
         const camera = new THREE.PerspectiveCamera(
             50, window.innerWidth / window.innerHeight, 0.001, 100);
-        camera.position.set(0.5, 0.4, 0.5);
+        camera.up.set(0, 0, 1);
+        camera.position.set(0.5, -0.5, 0.4);
 
         // ---- Renderer ----
         const canvas = document.getElementById('viewer');
@@ -174,7 +175,7 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.1;
-        controls.target.set(0, 0.15, 0);
+        controls.target.set(0, 0, 0.15);
         controls.update();
 
         // ---- Lighting ----
@@ -195,13 +196,14 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
         dirLight3.position.set(0, -1, 3);
         scene.add(dirLight3);
 
-        // ---- Ground & Helpers ----
-        scene.add(new THREE.GridHelper(2, 20, 0x444466, 0x333355));
+        // ---- Ground & Helpers (Z-up) ----
+        const grid = new THREE.GridHelper(2, 20, 0x444466, 0x333355);
+        grid.rotation.x = Math.PI / 2;
+        scene.add(grid);
         scene.add(new THREE.AxesHelper(0.15));
 
         const groundMat = new THREE.ShadowMaterial({ opacity: 0.3 });
         const ground = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), groundMat);
-        ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
@@ -240,8 +242,8 @@ VIEWER_HTML_TEMPLATE = r"""<!DOCTYPE html>
             controls.target.copy(center);
             camera.position.set(
                 center.x + maxDim * 1.5,
-                center.y + maxDim * 1.0,
-                center.z + maxDim * 1.5
+                center.y - maxDim * 1.5,
+                center.z + maxDim * 1.0
             );
             controls.update();
 

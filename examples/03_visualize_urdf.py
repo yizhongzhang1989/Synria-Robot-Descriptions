@@ -24,6 +24,7 @@ import argparse
 import http.server
 import mimetypes
 import os
+import socket
 import sys
 import threading
 import webbrowser
@@ -377,6 +378,12 @@ def main():
         help="Direct path to a URDF file (overrides --name/--version/--variant)",
     )
     parser.add_argument(
+        "--host",
+        type=str,
+        default="0.0.0.0",
+        help="Host address to bind the server to (default: 0.0.0.0)",
+    )
+    parser.add_argument(
         "--port", type=int, default=7654, help="HTTP server port (default: 7654)"
     )
     parser.add_argument(
@@ -424,14 +431,22 @@ def main():
     handler = partial(ViewerHandler, viewer_html=viewer_html)
 
     try:
-        server = http.server.ThreadingHTTPServer(("127.0.0.1", args.port), handler)
+        server = http.server.ThreadingHTTPServer((args.host, args.port), handler)
     except OSError as e:
-        print(f"Error: Could not start server on port {args.port}: {e}")
+        print(f"Error: Could not start server on {args.host}:{args.port}: {e}")
         print("Try a different port with --port <number>")
         sys.exit(1)
 
     url = f"http://127.0.0.1:{args.port}/"
     print(f"URDF Viewer: {url}")
+    if args.host == "0.0.0.0":
+        hostname = socket.gethostname()
+        try:
+            local_ip = socket.gethostbyname(hostname)
+        except socket.gaierror:
+            local_ip = None
+        if local_ip:
+            print(f"  also at:   http://{local_ip}:{args.port}/")
     print(f"Model:       {urdf_rel}")
     print("Press Ctrl+C to stop.\n")
 

@@ -144,3 +144,37 @@ Script options:
 - Gazebo (via URDF)
 - PyBullet (via URDF)
 - Isaac Sim (via URDF/MJCF)
+
+## URDF Visualization
+
+A browser-based 3D URDF viewer is included for interactive visualization of robot models. It runs entirely offline with no internet connection required.
+
+### Quick Start
+
+```bash
+# Visualize the default model (Alicia_D v5.6 leader_ur)
+python examples/03_visualize_urdf.py
+```
+
+### Options
+
+```bash
+# Specify robot by name, version, and variant
+python examples/03_visualize_urdf.py --name Alicia_D --version v5_6 --variant gripper_100mm
+
+# Specify a URDF file path directly
+python examples/03_visualize_urdf.py --urdf synriard/urdf/Alicia_D_v5_6/Alicia_D_v5_6_leader_ur.urdf
+
+# Use a custom port
+python examples/03_visualize_urdf.py --port 8080
+
+# Start without auto-opening the browser
+python examples/03_visualize_urdf.py --no-browser
+```
+
+### Features
+
+- Interactive 3D orbit controls (rotate, zoom, pan)
+- Joint control sliders with real-time updates
+- Works on Windows and Linux (Python 3.7+, any modern browser)
+- Fully self-contained — no internet connection needed
